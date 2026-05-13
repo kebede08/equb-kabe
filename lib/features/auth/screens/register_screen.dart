@@ -54,27 +54,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    try {
-      await _authService.register(
-        fullName: _nameController.text.trim(),
-        phoneNumber: _phoneController.text.trim(),
-        password: _passwordController.text,
-        email: _emailController.text.trim().isEmpty ? null : _emailController.text.trim(),
-      );
-      if (mounted) {
-        context.push(AppRoutes.otp, extra: _phoneController.text.trim());
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+    // Simulate a short delay then go to OTP screen
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (mounted) {
+      setState(() => _isLoading = false);
+      context.push(AppRoutes.otp, extra: _phoneController.text.trim());
     }
   }
 

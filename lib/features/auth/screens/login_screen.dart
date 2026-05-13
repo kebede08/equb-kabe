@@ -31,23 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    try {
-      await _authService.login(
-        phoneNumber: _phoneController.text.trim(),
-        password: _passwordController.text,
-      );
-      if (mounted) context.go(AppRoutes.home);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+    // Simulate a short delay then go to home
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (mounted) {
+      setState(() => _isLoading = false);
+      context.go(AppRoutes.home);
     }
   }
 
