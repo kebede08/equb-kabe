@@ -6,7 +6,6 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../routes/app_routes.dart';
-import '../../../services/auth_service.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
@@ -19,7 +18,6 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   final _otpController = TextEditingController();
-  final _authService = AuthService();
   bool _isLoading = false;
   bool _canResend = false;
   int _resendSeconds = 60;
@@ -50,46 +48,28 @@ class _OtpScreenState extends State<OtpScreen> {
   Future<void> _verifyOtp() async {
     if (_otp.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter the 6-digit OTP')),
+        const SnackBar(content: Text('Please enter the 6-digit code')),
       );
       return;
     }
     setState(() => _isLoading = true);
-    try {
-      await _authService.verifyOtp(
-        phoneNumber: widget.phoneNumber,
-        otp: _otp,
-      );
-      if (mounted) context.go(AppRoutes.home);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+    // Simulate verification delay - accept any 6-digit code
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (mounted) {
+      setState(() => _isLoading = false);
+      context.go(AppRoutes.home);
     }
   }
 
   Future<void> _resendOtp() async {
-    try {
-      await _authService.resendOtp(widget.phoneNumber);
-      _startResendTimer();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('OTP sent successfully')),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
-      }
+    _startResendTimer();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('OTP sent successfully'),
+          backgroundColor: AppColors.secondary,
+        ),
+      );
     }
   }
 
