@@ -24,6 +24,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _authService = AuthService();
   bool _isLoading = false;
 
+  bool get _allFieldsFilled =>
+      _nameController.text.trim().isNotEmpty &&
+      _phoneController.text.trim().isNotEmpty &&
+      _passwordController.text.isNotEmpty &&
+      _confirmPasswordController.text.isNotEmpty;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.addListener(_rebuild);
+    _phoneController.addListener(_rebuild);
+    _passwordController.addListener(_rebuild);
+    _confirmPasswordController.addListener(_rebuild);
+  }
+
+  void _rebuild() => setState(() {});
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -154,8 +171,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 AppButton(
                   label: 'Create Account',
-                  onPressed: _register,
+                  onPressed: _allFieldsFilled ? _register : null,
                   isLoading: _isLoading,
+                  isDisabled: !_allFieldsFilled,
                 ),
                 const SizedBox(height: 24),
 
