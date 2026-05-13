@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Abebe Kebede',
+                              'Kebede Deleleg',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 22,

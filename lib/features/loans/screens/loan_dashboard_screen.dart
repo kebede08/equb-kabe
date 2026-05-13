@@ -24,14 +24,14 @@ class _LoanDashboardScreenState extends State<LoanDashboardScreen>
       amount: 10000, interestRate: 5,
       requestDate: DateTime.now().subtract(const Duration(days: 10)),
       approvalDate: DateTime.now().subtract(const Duration(days: 8)),
-      status: 'approved', memberName: 'Abebe Kebede',
+      status: 'approved', memberName: 'Kebede Deleleg',
       groupName: 'Family Savings', remainingBalance: 10500,
     ),
     LoanModel(
       loanId: 'l2', memberId: 'u1', groupId: '2',
       amount: 5000, interestRate: 5,
       requestDate: DateTime.now().subtract(const Duration(days: 2)),
-      status: 'pending', memberName: 'Abebe Kebede',
+      status: 'pending', memberName: 'Kebede Deleleg',
       groupName: 'Office Equb',
     ),
     LoanModel(
@@ -39,7 +39,7 @@ class _LoanDashboardScreenState extends State<LoanDashboardScreen>
       amount: 8000, interestRate: 5,
       requestDate: DateTime.now().subtract(const Duration(days: 60)),
       approvalDate: DateTime.now().subtract(const Duration(days: 58)),
-      status: 'paid', memberName: 'Abebe Kebede',
+      status: 'paid', memberName: 'Kebede Deleleg',
       groupName: 'Family Savings', remainingBalance: 0,
     ),
   ];

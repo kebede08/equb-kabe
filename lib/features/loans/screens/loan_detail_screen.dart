@@ -17,7 +17,7 @@ class LoanDetailScreen extends StatelessWidget {
       amount: 10000, interestRate: 5,
       requestDate: DateTime.now().subtract(const Duration(days: 10)),
       approvalDate: DateTime.now().subtract(const Duration(days: 8)),
-      status: 'approved', memberName: 'Abebe Kebede',
+      status: 'approved', memberName: 'Kebede Deleleg',
       groupName: 'Family Savings', remainingBalance: 10500,
       reason: 'Home renovation expenses',
     );

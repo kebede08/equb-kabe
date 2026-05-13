@@ -37,7 +37,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
   );
 
   final List<Map<String, dynamic>> _members = [
-    {'name': 'Abebe Kebede', 'phone': '+251911234567', 'status': 'paid', 'isAdmin': true, 'round': 1},
+    {'name': 'Kebede Deleleg', 'phone': '+251947642560', 'status': 'paid', 'isAdmin': true, 'round': 1},
     {'name': 'Tigist Alemu', 'phone': '+251922345678', 'status': 'paid', 'isAdmin': false, 'round': 2},
     {'name': 'Dawit Haile', 'phone': '+251933456789', 'status': 'pending', 'isAdmin': false, 'round': 3},
     {'name': 'Meron Tadesse', 'phone': '+251944567890', 'status': 'late', 'isAdmin': false, 'round': 4},
@@ -318,7 +318,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                 const Divider(height: 20),
                 _DetailRow(label: 'Status', value: _group.status.toUpperCase()),
                 const Divider(height: 20),
-                _DetailRow(label: 'Admin', value: 'Abebe Kebede'),
+                _DetailRow(label: 'Admin', value: 'Kebede Deleleg'),
               ],
             ),
           ),
