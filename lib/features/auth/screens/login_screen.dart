@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () => context.go(AppRoutes.register),
-                      child: const Text('Sign Up'),
+                      child: const Text('Create Account'),
                     ),
                   ],
                 ),
