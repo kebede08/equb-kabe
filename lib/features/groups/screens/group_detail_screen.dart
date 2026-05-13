@@ -6,7 +6,7 @@ import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../../../models/group_model.dart';
 import '../../../services/group_service.dart';
-import '../create_group_screen.dart';
+import 'create_group_screen.dart';
 
 class GroupDetailScreen extends StatefulWidget {
   final String groupId;
