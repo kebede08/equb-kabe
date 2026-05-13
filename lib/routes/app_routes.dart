@@ -181,11 +181,11 @@ class AppRoutes {
             path: settings,
             builder: (context, state) => const SettingsScreen(),
           ),
-          GoRoute(
-            path: 'revenue',
-            builder: (context, state) => const RevenueScreen(),
-          ),
         ],
+      ),
+      GoRoute(
+        path: revenue,
+        builder: (context, state) => const RevenueScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
