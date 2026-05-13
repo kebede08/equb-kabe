@@ -22,6 +22,7 @@ import '../features/reports/screens/reports_screen.dart';
 import '../features/education/screens/education_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../features/profile/screens/settings_screen.dart';
+import '../features/payouts/screens/payout_schedule_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -46,6 +47,7 @@ class AppRoutes {
   static const String education = '/education';
   static const String profile = '/profile';
   static const String settings = '/settings';
+  static const String payoutSchedule = '/groups/:id/payout';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -109,6 +111,21 @@ class AppRoutes {
                   final id = state.pathParameters['id']!;
                   return GroupDetailScreen(groupId: id);
                 },
+                routes: [
+                  GoRoute(
+                    path: 'payout',
+                    builder: (context, state) {
+                      final id = state.pathParameters['id']!;
+                      final extra = state.extra as Map<String, dynamic>? ?? {};
+                      return PayoutScheduleScreen(
+                        groupId: id,
+                        method: extra['method'] as PayoutMethod? ?? PayoutMethod.lottery,
+                        contributionAmount: (extra['amount'] as double?) ?? 5000,
+                        totalMembers: (extra['members'] as int?) ?? 8,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

@@ -6,6 +6,7 @@ import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../../../models/group_model.dart';
 import '../../../services/group_service.dart';
+import '../create_group_screen.dart';
 
 class GroupDetailScreen extends StatefulWidget {
   final String groupId;
@@ -329,6 +330,20 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
             label: 'Make Contribution',
             onPressed: () => context.go('/contributions/pay/${_group.groupId}'),
             icon: Icons.payments_outlined,
+          ),
+          const SizedBox(height: 12),
+          AppButton(
+            label: 'View Payout Schedule',
+            variant: ButtonVariant.secondary,
+            onPressed: () => context.go(
+              '/groups/${_group.groupId}/payout',
+              extra: {
+                'method': PayoutMethod.lottery,
+                'amount': _group.contributionAmount,
+                'members': _group.currentMembers ?? 8,
+              },
+            ),
+            icon: Icons.calendar_month_outlined,
           ),
           const SizedBox(height: 12),
           AppButton(

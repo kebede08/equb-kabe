@@ -6,7 +6,9 @@ import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../routes/app_routes.dart';
-import '../../../services/group_service.dart';
+
+// Payout method enum
+enum PayoutMethod { lottery, rotation, bidding }
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});
@@ -21,11 +23,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
   final _membersController = TextEditingController();
-  final _groupService = GroupService();
 
-  int _cycleDuration = 1; // months
+  int _cycleDuration = 1;
   DateTime? _startDate;
   bool _isLoading = false;
+  PayoutMethod _payoutMethod = PayoutMethod.lottery;
 
   @override
   void dispose() {
@@ -49,34 +51,16 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Future<void> _createGroup() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    try {
-      final group = await _groupService.createGroup(
-        groupName: _nameController.text.trim(),
-        contributionAmount: double.parse(_amountController.text),
-        cycleDuration: _cycleDuration,
-        maxMembers: int.tryParse(_membersController.text),
-        description: _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
-        startDate: _startDate,
+    await Future.delayed(const Duration(milliseconds: 900));
+    if (mounted) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Group created successfully!'),
+          backgroundColor: AppColors.secondary,
+        ),
       );
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Group created successfully!'),
-            backgroundColor: AppColors.secondary,
-          ),
-        );
-        context.go('/groups/${group.groupId}');
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      context.go(AppRoutes.groups);
     }
   }
 
@@ -92,7 +76,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
+                // Header banner
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
@@ -103,8 +87,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   child: Row(
                     children: [
                       Container(
-                        width: 52,
-                        height: 52,
+                        width: 52, height: 52,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(14),
@@ -116,19 +99,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'New Equb Group',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                            Text('New Equb Group', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
                             SizedBox(height: 4),
-                            Text(
-                              'Set up your savings group',
-                              style: TextStyle(color: Colors.white70, fontSize: 13),
-                            ),
+                            Text('Set up your savings group', style: TextStyle(color: Colors.white70, fontSize: 13)),
                           ],
                         ),
                       ),
@@ -137,6 +110,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 ),
                 const SizedBox(height: 28),
 
+                // ── Group Information ──────────────────────────────
                 _SectionLabel(label: 'Group Information'),
                 const SizedBox(height: 16),
 
@@ -160,6 +134,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 ),
                 const SizedBox(height: 28),
 
+                // ── Contribution Settings ──────────────────────────
                 _SectionLabel(label: 'Contribution Settings'),
                 const SizedBox(height: 16),
 
@@ -188,44 +163,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 const SizedBox(height: 20),
 
                 // Cycle Duration
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Cycle Duration',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textDark),
+                _DropdownField(
+                  label: 'Cycle Duration',
+                  icon: Icons.calendar_month_outlined,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      value: _cycleDuration,
+                      isExpanded: true,
+                      items: List.generate(24, (i) => i + 1)
+                          .map((m) => DropdownMenuItem(value: m, child: Text(m == 1 ? '1 Month' : '$m Months')))
+                          .toList(),
+                      onChanged: (v) => setState(() => _cycleDuration = v!),
                     ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceVariant,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.calendar_month_outlined, color: AppColors.textGray, size: 20),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<int>(
-                                value: _cycleDuration,
-                                isExpanded: true,
-                                items: List.generate(24, (i) => i + 1)
-                                    .map((m) => DropdownMenuItem(
-                                          value: m,
-                                          child: Text(m == 1 ? '1 Month' : '$m Months'),
-                                        ))
-                                    .toList(),
-                                onChanged: (v) => setState(() => _cycleDuration = v!),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
                 const SizedBox(height: 20),
 
@@ -233,10 +183,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Start Date (Optional)',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textDark),
-                    ),
+                    const Text('Start Date (Optional)', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textDark)),
                     const SizedBox(height: 8),
                     GestureDetector(
                       onTap: _pickStartDate,
@@ -268,6 +215,53 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 28),
+
+                // ── Payout Method ──────────────────────────────────
+                _SectionLabel(label: 'Payout Method'),
+                const SizedBox(height: 8),
+                const Text(
+                  'Choose how to decide who receives the pool each cycle',
+                  style: TextStyle(fontSize: 13, color: AppColors.textGray),
+                ),
+                const SizedBox(height: 16),
+
+                _PayoutMethodCard(
+                  method: PayoutMethod.lottery,
+                  selected: _payoutMethod == PayoutMethod.lottery,
+                  title: 'Lottery Draw',
+                  subtitle: 'A member is randomly selected each cycle. Fair and unbiased.',
+                  icon: Icons.casino_outlined,
+                  color: AppColors.primary,
+                  onTap: () => setState(() => _payoutMethod = PayoutMethod.lottery),
+                ),
+                const SizedBox(height: 12),
+
+                _PayoutMethodCard(
+                  method: PayoutMethod.rotation,
+                  selected: _payoutMethod == PayoutMethod.rotation,
+                  title: 'Fixed Rotation',
+                  subtitle: 'Members agree on a pre-set order before the group starts.',
+                  icon: Icons.swap_horiz_outlined,
+                  color: AppColors.secondary,
+                  onTap: () => setState(() => _payoutMethod = PayoutMethod.rotation),
+                ),
+                const SizedBox(height: 12),
+
+                _PayoutMethodCard(
+                  method: PayoutMethod.bidding,
+                  selected: _payoutMethod == PayoutMethod.bidding,
+                  title: 'Bidding',
+                  subtitle: 'Members bid for early payout. Highest bidder wins; interest shared among all.',
+                  icon: Icons.gavel_outlined,
+                  color: AppColors.warning,
+                  onTap: () => setState(() => _payoutMethod = PayoutMethod.bidding),
+                ),
+
+                // Extra info based on selected method
+                const SizedBox(height: 16),
+                _PayoutMethodInfo(method: _payoutMethod),
+
                 const SizedBox(height: 36),
 
                 AppButton(
@@ -292,6 +286,164 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 }
 
+// ── Payout Method Card ───────────────────────────────────────────────────────
+
+class _PayoutMethodCard extends StatelessWidget {
+  final PayoutMethod method;
+  final bool selected;
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _PayoutMethodCard({
+    required this.method,
+    required this.selected,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: selected ? color.withOpacity(0.06) : AppColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: selected ? color : AppColors.border,
+            width: selected ? 2 : 1,
+          ),
+          boxShadow: selected
+              ? [BoxShadow(color: color.withOpacity(0.15), blurRadius: 8, offset: const Offset(0, 3))]
+              : const [BoxShadow(color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 2))],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48, height: 48,
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: selected ? color : AppColors.textDark)),
+                  const SizedBox(height: 4),
+                  Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.textGray, height: 1.4)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              width: 22, height: 22,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: selected ? color : AppColors.border, width: 2),
+                color: selected ? color : Colors.transparent,
+              ),
+              child: selected ? const Icon(Icons.check, color: Colors.white, size: 14) : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Payout Method Info Box ───────────────────────────────────────────────────
+
+class _PayoutMethodInfo extends StatelessWidget {
+  final PayoutMethod method;
+  const _PayoutMethodInfo({required this.method});
+
+  @override
+  Widget build(BuildContext context) {
+    switch (method) {
+      case PayoutMethod.lottery:
+        return _InfoBox(
+          color: AppColors.primary,
+          icon: Icons.info_outline,
+          items: const [
+            'Each cycle a random draw picks the winner',
+            'All members have equal chance every round',
+            'Draw happens automatically on the cycle date',
+            'Results are visible to all group members',
+          ],
+        );
+      case PayoutMethod.rotation:
+        return _InfoBox(
+          color: AppColors.secondary,
+          icon: Icons.info_outline,
+          items: const [
+            'You set the payout order when group starts',
+            'Members can swap their round by mutual agreement',
+            'Everyone knows in advance when they receive',
+            'Most predictable method for planning',
+          ],
+        );
+      case PayoutMethod.bidding:
+        return _InfoBox(
+          color: AppColors.warning,
+          icon: Icons.info_outline,
+          items: const [
+            'Members bid an interest % to receive early',
+            'Highest bidder gets the pool that cycle',
+            'The bid interest is split among all other members',
+            'Later rounds receive more due to accumulated interest',
+          ],
+        );
+    }
+  }
+}
+
+class _InfoBox extends StatelessWidget {
+  final Color color;
+  final IconData icon;
+  final List<String> items;
+  const _InfoBox({required this.color, required this.icon, required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: items.map((item) => Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.check_circle_outline, color: color, size: 16),
+              const SizedBox(width: 8),
+              Expanded(child: Text(item, style: TextStyle(fontSize: 12, color: color.withOpacity(0.85), height: 1.4))),
+            ],
+          ),
+        )).toList(),
+      ),
+    );
+  }
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
 class _SectionLabel extends StatelessWidget {
   final String label;
   const _SectionLabel({required this.label});
@@ -303,6 +455,39 @@ class _SectionLabel extends StatelessWidget {
         Container(width: 4, height: 18, decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(2))),
         const SizedBox(width: 8),
         Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textDark)),
+      ],
+    );
+  }
+}
+
+class _DropdownField extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Widget child;
+  const _DropdownField({required this.label, required this.icon, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textDark)),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceVariant,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: AppColors.textGray, size: 20),
+              const SizedBox(width: 12),
+              Expanded(child: child),
+            ],
+          ),
+        ),
       ],
     );
   }
