@@ -217,6 +217,11 @@ class HomeScreen extends StatelessWidget {
                         label: 'Reports',
                         onTap: () => context.go(AppRoutes.reports),
                       ),
+                      _QuickAction(
+                        icon: Icons.monetization_on_outlined,
+                        label: 'Revenue',
+                        onTap: () => context.go(AppRoutes.revenue),
+                      ),
                     ],
                   ),
 

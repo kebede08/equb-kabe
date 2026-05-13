@@ -79,6 +79,7 @@ class ProfileScreen extends StatelessWidget {
                   _Section(
                     title: 'Support',
                     items: [
+                      _MenuItem(icon: Icons.monetization_on_outlined, label: 'Revenue Management', onTap: () => context.go(AppRoutes.revenue)),
                       _MenuItem(icon: Icons.help_outline, label: 'Help Center', onTap: () {}),
                       _MenuItem(icon: Icons.privacy_tip_outlined, label: 'Privacy Policy', onTap: () {}),
                       _MenuItem(icon: Icons.description_outlined, label: 'Terms of Service', onTap: () {}),

@@ -23,6 +23,7 @@ import '../features/education/screens/education_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../features/profile/screens/settings_screen.dart';
 import '../features/payouts/screens/payout_schedule_screen.dart';
+import '../features/revenue/screens/revenue_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -48,6 +49,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String settings = '/settings';
   static const String payoutSchedule = '/groups/:id/payout';
+  static const String revenue = '/revenue';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -178,6 +180,10 @@ class AppRoutes {
           GoRoute(
             path: settings,
             builder: (context, state) => const SettingsScreen(),
+          ),
+          GoRoute(
+            path: 'revenue',
+            builder: (context, state) => const RevenueScreen(),
           ),
         ],
       ),
