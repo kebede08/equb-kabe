@@ -427,7 +427,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
 
   Widget _buildActivity() {
     final activities = [
-      {'icon': Icons.payments, 'color': AppColors.secondary, 'title': 'Abebe paid contribution', 'time': '2 hours ago', 'amount': '+ETB 5,000'},
+      {'icon': Icons.payments, 'color': AppColors.secondary, 'title': 'Kebede paid contribution', 'time': '2 hours ago', 'amount': '+ETB 5,000'},
       {'icon': Icons.payments, 'color': AppColors.secondary, 'title': 'Tigist paid contribution', 'time': '5 hours ago', 'amount': '+ETB 5,000'},
       {'icon': Icons.person_add, 'color': AppColors.info, 'title': 'Liya Worku joined the group', 'time': '1 day ago', 'amount': null},
       {'icon': Icons.warning_amber, 'color': AppColors.warning, 'title': 'Meron payment overdue', 'time': '2 days ago', 'amount': null},
