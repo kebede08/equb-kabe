@@ -24,6 +24,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final _amountController = TextEditingController();
   final _membersController = TextEditingController();
 
+  // Cycle type: 'weeks' or 'months'
+  String _cycleType = 'weeks';
   int _cycleDuration = 1;
   DateTime? _startDate;
   bool _isLoading = false;
@@ -163,19 +165,88 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 const SizedBox(height: 20),
 
                 // Cycle Duration
-                _DropdownField(
-                  label: 'Cycle Duration',
-                  icon: Icons.calendar_month_outlined,
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<int>(
-                      value: _cycleDuration,
-                      isExpanded: true,
-                      items: List.generate(24, (i) => i + 1)
-                          .map((m) => DropdownMenuItem(value: m, child: Text(m == 1 ? '1 Month' : '$m Months')))
-                          .toList(),
-                      onChanged: (v) => setState(() => _cycleDuration = v!),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Cycle Duration', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textDark)),
+                    const SizedBox(height: 8),
+                    // Week / Month toggle
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() { _cycleType = 'weeks'; _cycleDuration = 1; }),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: _cycleType == 'weeks' ? AppColors.primary : AppColors.surfaceVariant,
+                                borderRadius: const BorderRadius.horizontal(left: Radius.circular(10)),
+                                border: Border.all(color: _cycleType == 'weeks' ? AppColors.primary : AppColors.border),
+                              ),
+                              child: Center(
+                                child: Text('Weekly', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: _cycleType == 'weeks' ? Colors.white : AppColors.textGray)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() { _cycleType = 'months'; _cycleDuration = 1; }),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: _cycleType == 'months' ? AppColors.primary : AppColors.surfaceVariant,
+                                borderRadius: const BorderRadius.horizontal(right: Radius.circular(10)),
+                                border: Border.all(color: _cycleType == 'months' ? AppColors.primary : AppColors.border),
+                              ),
+                              child: Center(
+                                child: Text('Monthly', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: _cycleType == 'months' ? Colors.white : AppColors.textGray)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                    const SizedBox(height: 10),
+                    // Duration picker
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceVariant,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.calendar_month_outlined, color: AppColors.textGray, size: 20),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<int>(
+                                value: _cycleDuration,
+                                isExpanded: true,
+                                items: _cycleType == 'weeks'
+                                    ? List.generate(12, (i) => i + 1)
+                                        .map((w) => DropdownMenuItem(value: w, child: Text(w == 1 ? '1 Week' : '$w Weeks')))
+                                        .toList()
+                                    : List.generate(24, (i) => i + 1)
+                                        .map((m) => DropdownMenuItem(value: m, child: Text(m == 1 ? '1 Month' : '$m Months')))
+                                        .toList(),
+                                onChanged: (v) => setState(() => _cycleDuration = v!),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _cycleType == 'weeks'
+                          ? 'Members contribute every $_cycleDuration week${_cycleDuration > 1 ? "s" : ""}'
+                          : 'Members contribute every $_cycleDuration month${_cycleDuration > 1 ? "s" : ""}',
+                      style: const TextStyle(fontSize: 12, color: AppColors.textGray),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
 

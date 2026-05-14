@@ -57,8 +57,11 @@ class ProfileScreen extends StatelessWidget {
                   _Section(
                     title: 'Account',
                     items: [
-                      _MenuItem(icon: Icons.person_outline, label: 'Edit Profile', onTap: () {}),
-                      _MenuItem(icon: Icons.lock_outline, label: 'Change Password', onTap: () {}),
+                      _MenuItem(icon: Icons.person_outline, label: 'Edit Profile', onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit Profile coming soon')));
+                      }),
+                      _MenuItem(icon: Icons.lock_outline, label: 'Change Password', onTap: () => context.go(AppRoutes.settings)),
+                      _MenuItem(icon: Icons.settings_outlined, label: 'Settings', onTap: () => context.go(AppRoutes.settings)),
                       _MenuItem(icon: Icons.fingerprint, label: 'Biometric Login', trailing: Switch(value: false, onChanged: (v) {})),
                     ],
                   ),
@@ -68,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
                   _Section(
                     title: 'Preferences',
                     items: [
-                      _MenuItem(icon: Icons.notifications_outlined, label: 'Notifications', onTap: () {}),
+                      _MenuItem(icon: Icons.notifications_outlined, label: 'Notifications', onTap: () => context.go(AppRoutes.settings)),
                       _MenuItem(icon: Icons.language_outlined, label: 'Language', trailing: const Text('English', style: TextStyle(color: AppColors.textGray))),
                       _MenuItem(icon: Icons.dark_mode_outlined, label: 'Dark Mode', trailing: Switch(value: false, onChanged: (v) {})),
                     ],
@@ -80,9 +83,17 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Support',
                     items: [
                       _MenuItem(icon: Icons.monetization_on_outlined, label: 'Revenue Management', onTap: () => context.go(AppRoutes.revenue)),
-                      _MenuItem(icon: Icons.help_outline, label: 'Help Center', onTap: () {}),
-                      _MenuItem(icon: Icons.privacy_tip_outlined, label: 'Privacy Policy', onTap: () {}),
-                      _MenuItem(icon: Icons.description_outlined, label: 'Terms of Service', onTap: () {}),
+                      _MenuItem(icon: Icons.bar_chart_outlined, label: 'Reports', onTap: () => context.go(AppRoutes.reports)),
+                      _MenuItem(icon: Icons.school_outlined, label: 'Financial Education', onTap: () => context.go(AppRoutes.education)),
+                      _MenuItem(icon: Icons.help_outline, label: 'Help Center', onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Help Center coming soon')));
+                      }),
+                      _MenuItem(icon: Icons.privacy_tip_outlined, label: 'Privacy Policy', onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Privacy Policy coming soon')));
+                      }),
+                      _MenuItem(icon: Icons.description_outlined, label: 'Terms of Service', onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Terms of Service coming soon')));
+                      }),
                       _MenuItem(icon: Icons.info_outline, label: 'About', trailing: const Text('v1.0.0', style: TextStyle(color: AppColors.textGray))),
                     ],
                   ),
