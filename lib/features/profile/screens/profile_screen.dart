@@ -118,7 +118,6 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       );
                       if (confirm == true && context.mounted) {
-                        await AuthService().logout();
                         context.go(AppRoutes.login);
                       }
                     },
