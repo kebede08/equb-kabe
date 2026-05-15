@@ -57,9 +57,7 @@ class ProfileScreen extends StatelessWidget {
                   _Section(
                     title: 'Account',
                     items: [
-                      _MenuItem(icon: Icons.person_outline, label: 'Edit Profile', onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit Profile coming soon')));
-                      }),
+                      _MenuItem(icon: Icons.person_outline, label: 'Edit Profile', onTap: () => _showEditProfile(context)),
                       _MenuItem(icon: Icons.lock_outline, label: 'Change Password', onTap: () => context.go(AppRoutes.settings)),
                       _MenuItem(icon: Icons.settings_outlined, label: 'Settings', onTap: () => context.go(AppRoutes.settings)),
                       _MenuItem(icon: Icons.fingerprint, label: 'Biometric Login', trailing: Switch(value: false, onChanged: (v) {})),
