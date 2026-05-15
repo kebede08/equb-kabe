@@ -83,15 +83,9 @@ class ProfileScreen extends StatelessWidget {
                       _MenuItem(icon: Icons.monetization_on_outlined, label: 'Revenue Management', onTap: () => context.go(AppRoutes.revenue)),
                       _MenuItem(icon: Icons.bar_chart_outlined, label: 'Reports', onTap: () => context.go(AppRoutes.reports)),
                       _MenuItem(icon: Icons.school_outlined, label: 'Financial Education', onTap: () => context.go(AppRoutes.education)),
-                      _MenuItem(icon: Icons.help_outline, label: 'Help Center', onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Help Center coming soon')));
-                      }),
-                      _MenuItem(icon: Icons.privacy_tip_outlined, label: 'Privacy Policy', onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Privacy Policy coming soon')));
-                      }),
-                      _MenuItem(icon: Icons.description_outlined, label: 'Terms of Service', onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Terms of Service coming soon')));
-                      }),
+                      _MenuItem(icon: Icons.help_outline, label: 'Help Center', onTap: () => _showHelpCenter(context)),
+                      _MenuItem(icon: Icons.privacy_tip_outlined, label: 'Privacy Policy', onTap: () => _showPolicy(context, 'Privacy Policy', 'We collect only the data necessary to provide the Equb service. Your personal information is never sold to third parties. All data is encrypted and stored securely. You may request deletion of your account and data at any time by contacting support.')),
+                      _MenuItem(icon: Icons.description_outlined, label: 'Terms of Service', onTap: () => _showPolicy(context, 'Terms of Service', 'By using Equb, you agree to participate honestly in savings groups. You are responsible for making contributions on time. The platform is not liable for disputes between group members. Fraudulent activity will result in immediate account termination.')),
                       _MenuItem(icon: Icons.info_outline, label: 'About', trailing: const Text('v1.0.0', style: TextStyle(color: AppColors.textGray))),
                     ],
                   ),
