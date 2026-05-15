@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "equb-kabe",
+    "site": "equb-kabe-6b8a4",
     "public": "build/web",
     "ignore": [
       "firebase.json",
